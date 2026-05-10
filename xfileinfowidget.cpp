@@ -137,7 +137,7 @@ void XFileInfoWidget::registerShortcuts(bool bState)
 void XFileInfoWidget::on_toolButtonSave_clicked()
 {
     QString sFileName = XBinary::getResultFileName(m_pDevice, QString("%1.txt").arg(tr("Info")));
-    sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
+    sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files")).arg(tr("All files")));
 
     if (!sFileName.isEmpty()) {
         XOptions::savePlainTextEdit(ui->plainTextEditFileInfo, sFileName);

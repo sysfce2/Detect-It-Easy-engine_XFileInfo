@@ -27,6 +27,8 @@ class XFileInfoItem {
 public:
     XFileInfoItem(const QString &sName, const QVariant &varValue, XFileInfoItem *pParentItem = nullptr);
     ~XFileInfoItem();
+    XFileInfoItem(const XFileInfoItem &) = delete;
+    XFileInfoItem &operator=(const XFileInfoItem &) = delete;
 
     void appendChild(XFileInfoItem *pItemChild);
     XFileInfoItem *child(int nRow);

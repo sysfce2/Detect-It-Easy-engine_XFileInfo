@@ -34,7 +34,10 @@ XFileInfoItem::~XFileInfoItem()
 
 void XFileInfoItem::appendChild(XFileInfoItem *pItemChild)
 {
-    m_listChildItems.append(pItemChild);
+    if (pItemChild) {
+        pItemChild->m_pParentItem = this;
+        m_listChildItems.append(pItemChild);
+    }
 }
 
 XFileInfoItem *XFileInfoItem::child(int nRow)

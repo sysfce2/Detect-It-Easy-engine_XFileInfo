@@ -70,9 +70,9 @@ QModelIndex XFileInfoModel::parent(const QModelIndex &index) const
 
     if (index.isValid()) {
         XFileInfoItem *pItemChild = static_cast<XFileInfoItem *>(index.internalPointer());
-        XFileInfoItem *pParentItem = pItemChild->getParentItem();
+        XFileInfoItem *pParentItem = pItemChild ? pItemChild->getParentItem() : nullptr;
 
-        if (pParentItem != m_pRootItem) {
+        if (pParentItem && (pParentItem != m_pRootItem)) {
             result = createIndex(pParentItem->row(), 0, pParentItem);
         }
     }
@@ -275,7 +275,7 @@ void XFileInfoModel::_toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qin
 void XFileInfoModel::_toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
 {
     if (nLevel) {
-        pString->append(QString("%1;%2\n").arg(pItem->getName(), pItem->getValue().toString()));
+        pString->append(QString("%1;%2\n").arg(pItem->getName()).arg(pItem->getValue().toString()));
     }
 
     qint32 nNumberOfChildren = pItem->childCount();
@@ -288,7 +288,7 @@ void XFileInfoModel::_toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLeve
 void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
 {
     if (nLevel) {
-        pString->append(QString("%1\t%2\n").arg(pItem->getName(), pItem->getValue().toString()));
+        pString->append(QString("%1\t%2\n").arg(pItem->getName()).arg(pItem->getValue().toString()));
     }
 
     qint32 nNumberOfChildren = pItem->childCount();
@@ -303,7 +303,7 @@ void XFileInfoModel::_toFormattedString(QString *pString, XFileInfoItem *pItem, 
     if (nLevel) {
         QString sResult;
         sResult = sResult.leftJustified(4 * (nLevel - 1), ' ');  // TODO a function !!!
-        sResult.append(QString("%1: %2\n").arg(pItem->getName(), pItem->getValue().toString()));
+        sResult.append(QString("%1: %2\n").arg(pItem->getName()).arg(pItem->getValue().toString()));
         pString->append(sResult);
     }
 
