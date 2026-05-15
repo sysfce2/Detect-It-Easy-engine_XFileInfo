@@ -4,16 +4,23 @@ DEPENDPATH += $$PWD
 HEADERS += \
     $$PWD/xfileinfo.h \
     $$PWD/xfileinfoitem.h \
-    $$PWD/xfileinfomodel.h
+    $$PWD/xfileinfomodel.h \
+    $$PWD/xfileinfovalues.h
 
 SOURCES += \
     $$PWD/xfileinfo.cpp \
     $$PWD/xfileinfoitem.cpp \
-    $$PWD/xfileinfomodel.cpp
+    $$PWD/xfileinfomodel.cpp \
+    $$PWD/xfileinfovalues.cpp
 
 !contains(XCONFIG, xformats) {
     XCONFIG += xformats
     include($$PWD/../Formats/xformats.pri)
+}
+
+!contains(XCONFIG, xoptions) {
+    XCONFIG += xoptions
+    include($$PWD/../XOptions/xoptions.pri)
 }
 
 contains(XCONFIG, use_capstone_x86) {
@@ -34,4 +41,3 @@ DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
     $$PWD/xfileinfo.cmake
-

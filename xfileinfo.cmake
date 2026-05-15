@@ -33,4 +33,6 @@ set(XFILEINFO_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfoitem.h
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfomodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfomodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/xfileinfovalues.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/xfileinfovalues.h
 )
