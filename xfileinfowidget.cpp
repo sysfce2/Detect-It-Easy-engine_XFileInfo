@@ -37,6 +37,8 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
     m_pDevice = nullptr;
     m_nOffset = 0;
     m_nSize = 0;
+    ui->toolButtonReload->setEnabled(false);
+    ui->toolButtonSave->setEnabled(false);
 
     ui->checkBoxComment->setChecked(true);
 
@@ -61,6 +63,18 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QS
     // TODO sString !!!
     this->m_pDevice = pDevice;
     m_nOffset = 0;
+
+    if (!m_pDevice) {
+        m_nSize = 0;
+        ui->plainTextEditFileInfo->clear();
+        ui->comboBoxMethod->clear();
+        ui->toolButtonReload->setEnabled(false);
+        ui->toolButtonSave->setEnabled(false);
+        return;
+    }
+
+    ui->toolButtonReload->setEnabled(true);
+    ui->toolButtonSave->setEnabled(true);
     m_nSize = pDevice->size();
 
     if (this->m_nSize == -1) {  // TODO Check
@@ -136,6 +150,10 @@ void XFileInfoWidget::registerShortcuts(bool bState)
 
 void XFileInfoWidget::on_toolButtonSave_clicked()
 {
+    if (!m_pDevice) {
+        return;
+    }
+
     QString sFileName = XBinary::getResultFileName(m_pDevice, QString("%1.txt").arg(tr("Info")));
     sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files")).arg(tr("All files")));
 
