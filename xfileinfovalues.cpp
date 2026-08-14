@@ -569,7 +569,7 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     }
 
     if ((bNeedFileFormatInfo || bNeedMemoryMap || bNeedPEValues) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        fileType = XFormats::getPrefFileType(pDevice, true, pPdStruct);
+        fileType = XFormats::getPrefFileType(pDevice, XBinary::FT_FLAG_FORMATS, pPdStruct);
         pBinary = XFormats::createClass(fileType, pDevice, false, -1);
 
         if (pBinary) {

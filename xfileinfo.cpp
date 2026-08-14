@@ -1235,7 +1235,7 @@ void XFileInfo::process()
     XBinary::FT fileType = m_options.fileType;
 
     if (fileType == XBinary::FT_UNKNOWN) {
-        fileType = XFormats::getPrefFileType(m_pDevice);
+        fileType = XFormats::getPrefFileType(m_pDevice, XBinary::FT_FLAG_FORMATS);
     }
 
     {
