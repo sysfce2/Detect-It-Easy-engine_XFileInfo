@@ -650,14 +650,11 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
         quint64 nDatabases = pOptions ? XScanEngine::getDatabasesFromGlobalOptions(pOptions) : XScanEngine::DATABASE_MAIN;
         XScanEngine::setDatabases(&scanOptionsDIE, nDatabases);
 
-        scanOptionsDIE.bUseExtraDatabase = true;
         scanOptionsDIE.bUseCustomDatabase = true;
 
         if (pOptions && pOptions->isIDPresent(XOptions::ID_SCAN_ENGINE_DIE_ENABLED)) {
             scanOptionsDIE.sMainDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_MAIN_PATH).toString();
-            scanOptionsDIE.sExtraDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_PATH).toString();
             scanOptionsDIE.sCustomDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_PATH).toString();
-            scanOptionsDIE.bUseExtraDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_ENABLED).toBool();
             scanOptionsDIE.bUseCustomDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_ENABLED).toBool();
         }
 
