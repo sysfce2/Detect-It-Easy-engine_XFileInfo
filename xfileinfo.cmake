@@ -28,9 +28,13 @@ if (NOT DEFINED SPECABSTRACT_SOURCES)
     include(${CMAKE_CURRENT_LIST_DIR}/../SpecAbstract/specabstract.cmake)
     set(XFILEINFO_SOURCES ${XFILEINFO_SOURCES} ${SPECABSTRACT_SOURCES})
 endif()
-if (NOT DEFINED DIE_SCRIPT_SOURCES)
-    include(${CMAKE_CURRENT_LIST_DIR}/../die_script/die_script.cmake)
-    set(XFILEINFO_SOURCES ${XFILEINFO_SOURCES} ${DIE_SCRIPT_SOURCES})
+if (USE_DIE)
+    add_definitions(-DUSE_DIE)
+
+    if (NOT DEFINED DIE_SCRIPT_SOURCES)
+        include(${CMAKE_CURRENT_LIST_DIR}/../die_script/die_script.cmake)
+        set(XFILEINFO_SOURCES ${XFILEINFO_SOURCES} ${DIE_SCRIPT_SOURCES})
+    endif()
 endif()
 
 set(XFILEINFO_SOURCES

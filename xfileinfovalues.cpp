@@ -19,7 +19,9 @@
  * SOFTWARE.
  */
 #include "xfileinfovalues.h"
+#ifdef USE_DIE
 #include "die_script.h"
+#endif
 #include "specabstract.h"
 #include "xdisasmcore.h"
 #include "xoptions.h"
@@ -99,12 +101,12 @@ bool isNFDValue(XFileInfoValues::XFIV value)
 {
     return (value == XFileInfoValues::XFIV_NFD_LINKER) || (value == XFileInfoValues::XFIV_NFD_COMPILER) || (value == XFileInfoValues::XFIV_NFD_WRAPPER);
 }
-
+#ifdef USE_DIE
 bool isDIEValue(XFileInfoValues::XFIV value)
 {
     return (value == XFileInfoValues::XFIV_DIE_LINKER) || (value == XFileInfoValues::XFIV_DIE_COMPILER) || (value == XFileInfoValues::XFIV_DIE_WRAPPER);
 }
-
+#endif
 bool isXScanEngineValue(XFileInfoValues::XFIV value)
 {
     return (value == XFileInfoValues::XFIV_FILEFORMAT) || (value == XFileInfoValues::XFIV_OPERATIONSYSTEM);
@@ -112,7 +114,11 @@ bool isXScanEngineValue(XFileInfoValues::XFIV value)
 
 bool isScanValue(XFileInfoValues::XFIV value)
 {
-    return isXScanEngineValue(value) || isNFDValue(value) || isDIEValue(value);
+    bool bResult = isXScanEngineValue(value) || isNFDValue(value);
+#ifdef USE_DIE
+    bResult = bResult || isDIEValue(value);
+#endif
+    return bResult;
 }
 
 bool isPEIntegerValue(XFileInfoValues::XFIV value)
@@ -344,9 +350,11 @@ XBinary::XIDSTRING _TABLE_XFIV[] = {
     {XFileInfoValues::XFIV_NFD_LINKER, QObject::tr("NFD linker")},
     {XFileInfoValues::XFIV_NFD_COMPILER, QObject::tr("NFD compiler")},
     {XFileInfoValues::XFIV_NFD_WRAPPER, QObject::tr("NFD wrapper")},
+#ifdef USE_DIE
     {XFileInfoValues::XFIV_DIE_LINKER, QObject::tr("DiE linker")},
     {XFileInfoValues::XFIV_DIE_COMPILER, QObject::tr("DiE compiler")},
     {XFileInfoValues::XFIV_DIE_WRAPPER, QObject::tr("DiE wrapper")},
+#endif
 };
 
 const qint32 N_XFIV = sizeof(_TABLE_XFIV) / sizeof(XBinary::XIDSTRING);
@@ -535,10 +543,16 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     QList<XPE::IMPORT_RECORD> listPEImportRecords;
     XScanEngine::SCAN_RESULT xScanEngineResult = {};
     XScanEngine::SCAN_RESULT nfdScanResult = {};
-    XScanEngine::SCAN_RESULT dieScanResult = {};
     XScanEngine::SCAN_OPTIONS scanOptionsXScanEngine = {};
     XScanEngine::SCAN_OPTIONS scanOptionsNFD = {};
+    bool bNeedNFDValues = false;
+
+#ifdef USE_DIE
+    XScanEngine::SCAN_RESULT dieScanResult = {};
     XScanEngine::SCAN_OPTIONS scanOptionsDIE = {};
+    bool bNeedDIEValues = false;
+#endif
+
     XBinary::FT fileType = XBinary::FT_UNKNOWN;
     bool bNeedFileFormatInfo = false;
     bool bNeedMemoryMap = false;
@@ -548,8 +562,7 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     bool bNeedPEImportHashValues = false;
     bool bNeedXScanEngineValues = false;
     bool bNeedOperationSystem = false;
-    bool bNeedNFDValues = false;
-    bool bNeedDIEValues = false;
+
 
     qint32 nNumberOfValues = pList->size();
 
@@ -565,7 +578,9 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
         bNeedXScanEngineValues |= isXScanEngineValue(value);
         bNeedOperationSystem |= (value == XFIV_OPERATIONSYSTEM);
         bNeedNFDValues |= isNFDValue(value);
+#ifdef USE_DIE
         bNeedDIEValues |= isDIEValue(value);
+#endif
     }
 
     if ((bNeedFileFormatInfo || bNeedMemoryMap || bNeedPEValues) && XBinary::isPdStructNotCanceled(pPdStruct)) {
@@ -641,6 +656,7 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
         }
     }
 
+#ifdef USE_DIE
     if (bNeedDIEValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
         qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
         quint64 nFlags = pOptions ? XScanEngine::getScanFlagsFromGlobalOptions(pOptions) : 0;
@@ -668,6 +684,7 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             pDevice->seek(nDevicePos);
         }
     }
+#endif
 
     for (qint32 i = 0; (i < nNumberOfValues) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
         XFIV value = pList->at(i);
@@ -694,12 +711,14 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             varValue = XScanEngine::getCompiler(&scanOptionsNFD, &nfdScanResult.listRecords);
         } else if (value == XFIV_NFD_WRAPPER) {
             varValue = XScanEngine::getWrapper(&scanOptionsNFD, &nfdScanResult.listRecords);
+#ifdef USE_DIE
         } else if (value == XFIV_DIE_LINKER) {
             varValue = XScanEngine::getLinker(&scanOptionsDIE, &dieScanResult.listRecords);
         } else if (value == XFIV_DIE_COMPILER) {
             varValue = XScanEngine::getCompiler(&scanOptionsDIE, &dieScanResult.listRecords);
         } else if (value == XFIV_DIE_WRAPPER) {
             varValue = XScanEngine::getWrapper(&scanOptionsDIE, &dieScanResult.listRecords);
+#endif
         } else if (value == XFIV_PE_TIMEDATESTAMP) {
             if (pPE) {
                 varValue = pPE->getFileHeader_TimeDateStamp();

@@ -33,9 +33,12 @@ SOURCES += \
     include($$PWD/../SpecAbstract/specabstract.pri)
 }
 
-!contains(XCONFIG, die_script) {
-    XCONFIG += die_script
-    include($$PWD/../die_script/die_script.pri)
+
+contains(XCONFIG, use_die) {
+    !contains(XCONFIG, die_script) {
+        XCONFIG += die_script
+        include($$PWD/../die_script/die_script.pri)
+    }
 }
 
 contains(XCONFIG, use_capstone_x86) {

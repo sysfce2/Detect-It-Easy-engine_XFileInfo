@@ -47,9 +47,11 @@ public:
         XFIV_NFD_LINKER,
         XFIV_NFD_COMPILER,
         XFIV_NFD_WRAPPER,
+#ifdef USE_DIE
         XFIV_DIE_LINKER,
         XFIV_DIE_COMPILER,
         XFIV_DIE_WRAPPER,
+#endif
         XFIV_SIZE,
         XFIV_EXTENSION,
         XFIV_FILETYPE,
