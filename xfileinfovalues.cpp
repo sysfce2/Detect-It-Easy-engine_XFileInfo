@@ -35,10 +35,9 @@ const qint32 N_XFIV_SIGNATURECOUNT = 10;
 
 bool isBinaryValue(XFileInfoValues::XFIV value)
 {
-    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) ||
-           (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
-           (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE) || (value == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
-           (value == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) || (value == XFileInfoValues::XFIV_OVERLAY_SIZE) ||
+    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) || (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) ||
+           (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE) ||
+           (value == XFileInfoValues::XFIV_OVERLAY_BYTES) || (value == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) || (value == XFileInfoValues::XFIV_OVERLAY_SIZE) ||
            (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
 }
 
@@ -387,10 +386,9 @@ bool XFileInfoValues_Sort::operator()(const XFileInfoValues::RecordInfo &recordI
         if (dEntropy1 != dEntropy2) {
             return (sortOrder == Qt::DescendingOrder) ? (dEntropy2 < dEntropy1) : (dEntropy1 < dEntropy2);
         }
-    } else if ((xFIV == XFileInfoValues::XFIV_HEADER_BYTES) || (xFIV == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) ||
-               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
-               (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
-               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE)) {
+    } else if ((xFIV == XFileInfoValues::XFIV_HEADER_BYTES) || (xFIV == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) ||
+               (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES) || (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) ||
+               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE)) {
         QString sValue1 = recordInfo1.mapValues.value(xFIV).toString();
         QString sValue2 = recordInfo2.mapValues.value(xFIV).toString();
 
@@ -562,7 +560,6 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     bool bNeedPEImportHashValues = false;
     bool bNeedXScanEngineValues = false;
     bool bNeedOperationSystem = false;
-
 
     qint32 nNumberOfValues = pList->size();
 
