@@ -158,7 +158,9 @@ void XFileInfoWidget::on_toolButtonSave_clicked()
     sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files")).arg(tr("All files")));
 
     if (!sFileName.isEmpty()) {
-        XOptions::savePlainTextEdit(ui->plainTextEditFileInfo, sFileName);
+        if (!XOptions::savePlainTextEdit(ui->plainTextEditFileInfo, sFileName)) {
+            QMessageBox::critical(XOptions::getMainWidget(this), tr("Error"), QString("%1: %2").arg(tr("Cannot save file")).arg(sFileName));
+        }
     }
 }
 
